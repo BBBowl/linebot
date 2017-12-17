@@ -14,8 +14,8 @@ $_msg = $arrJson['events'][0]['message']['text'];
  
  
 $api_key="3rDixgr4hhgtGJCF2yfp6vag35Q10820";
-$url = 'mongodb://linebot:Sotus2017@ds159866.mlab.com:59866/linebot?apiKey='.$api_key.'';
-$json = file_get_contents('mongodb://linebot:Sotus2017@ds159866.mlab.com:59866/linebot?apiKey='.$api_key.'&q={"question":"'.$_msg.'"}');
+$url = 'https://api.mlab.com/api/1/databases/line-bbbot/collections/linebot?apiKey='.$api_key.'';
+$json = file_get_contents('https://api.mlab.com/api/1/databases/line-bbbot/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$_msg.'"}');
 $data = json_decode($json);
 $isData=sizeof($data);
  
@@ -73,5 +73,5 @@ curl_setopt($channel, CURLOPT_RETURNTRANSFER,true);
 curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, false);
 $result = curl_exec($channel);
 curl_close ($channel);
-echo "RESULT : ".$result."<br>JSON : ".$json;
+echo "RESULT : ".$result;
 ?>
