@@ -75,5 +75,5 @@ $result = curl_exec($channel);
 curl_close ($channel);
 echo "RESULT : ".$result;
 echo "<br>";
-echo "CONTENT : ".$content;
+echo "_MSSG : ".$_msg;
 ?>
