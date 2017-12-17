@@ -14,8 +14,8 @@ $_msg = $arrJson['events'][0]['message']['text'];
  
  
 $api_key="3rDixgr4hhgtGJCF2yfp6vag35Q10820";
-$url = 'https://api.mlab.com/api/1/databases/line-bbbot/collections/linebot?apiKey='.$api_key.'';
-$json = file_get_contents('https://api.mlab.com/api/1/databases/line-bbbot/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$_msg.'"}');
+$url = 'mongodb://line-bbbot:Sotus2017@ds159866.mlab.com:59866/linebot?apiKey='.$api_key.'';
+$json = file_get_contents('mongodb://line-bbbot:Sotus2017@ds159866.mlab.com:59866/linebot?apiKey='.$api_key.'&q={"question":"'.$_msg.'"}');
 $data = json_decode($json);
 $isData=sizeof($data);
  
