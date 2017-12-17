@@ -74,4 +74,6 @@ curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, false);
 $result = curl_exec($channel);
 curl_close ($channel);
 echo "RESULT : ".$result;
+echo "<br>";
+echo "CONTENT : ".$content;
 ?>
