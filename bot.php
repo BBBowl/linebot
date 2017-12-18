@@ -24,8 +24,9 @@
 		$DBName			= "duckduck";
 		$DBUsername		= "linebot2";
 		$DBURLMain		= "https://api.mlab.com/api/1/databases/".$DBName."/collections/".$DBUsername."?apiKey=".$DBAPIKey;
-		$DBURLQuery		= file_get_contents($DBURLMain.$DBQueryString);
+		$DBURLQuery		= $DBURLMain.$DBQueryString;
 		
+		$DBQuery		= file_get_contents($DBURLQuery);
 		$DBJSON			= json_decode($DBURLQuery);
 		$DBDataSize		= sizeof($DBJSON);
 	
@@ -79,7 +80,7 @@
 				foreach($DBJSON as $SVReply){
 					$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
 					$SVPOSTValue['messages'][0]['type']	= "text";
-					$SVPOSTValue['messages'][0]['text']	= $SVReply->reply;
+					$SVPOSTValue['messages'][0]['text']	= "ทดสอบ"; //$SVReply->reply;
 				}
 			}else{
 				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
