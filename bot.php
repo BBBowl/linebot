@@ -22,7 +22,7 @@
 		$DBAPIKey		= "gEd3E2gniu_jJsug_KdfopukhrMghFyC";
 		$DBQueryString	= '&q={"question":"'.$INPUTMsg.'"}';
 		$DBName			= "duckduck";
-		$DBUsername		= "linebot";
+		$DBUsername		= "linebot2";
 		$DBURLMain		= "https://api.mlab.com/api/1/databases/".$DBName."/collections/".$DBUsername."?apiKey=".$DBAPIKey;
 		$DBURLQuery		= file_get_contents($DBURLMain.$DBQueryString);
 		
