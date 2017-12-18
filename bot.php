@@ -87,7 +87,7 @@
 			}
 		}
 		
-		$SVCURL	= curl_init();
+		$SVCURL			= curl_init();
 			curl_setopt($SVCURL,CURLOPT_URL,$LINEURLFinal);
 			curl_setopt($SVCURL,CURLOPT_HEADER,false);
 			curl_setopt($SVCURL,CURLOPT_POST,true);
@@ -95,6 +95,8 @@
 			curl_setopt($SVCURL,CURLOPT_POSTFIELDS,json_encode($SVPOSTValue));
 			curl_setopt($SVCURL,CURLOPT_RETURNTRANSFER,true);
 			curl_setopt($SVCURL,CURLOPT_SSL_VERIFYPEER,false);
-			curl_exec($SVCURL);
+		$SVCURLResult	= curl_exec($SVCURL);
 		curl_close($SVCURL);
+		
+		echo $SVCURLResult;
 ?>
