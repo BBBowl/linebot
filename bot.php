@@ -98,9 +98,11 @@
 		$SVCURLResult	= curl_exec($SVCURL);
 		curl_close($SVCURL);
 		
-		echo "RESULT : ".$SVCURLResult;
+		//echo "RESULT : ".$SVCURLResult;
+		//echo "<br>";
+		echo "DBJSON : ";
+		print_r($DBJSON);
 		echo "<br>";
-		echo "DBJSON : ".$DBJSON;
-		echo "<br>";
+		echo "SVPOSTValue : ";
 		print_r($SVPOSTValue);
 ?>
