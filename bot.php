@@ -75,7 +75,7 @@
 				$LINEURLFinal	= $LINEURLByMsgType['POSTReply'];
 			}
 		}else{
-			if(!empty($DBDataSize)){
+			if($DBDataSize > 0){
 				foreach($DBJSON as $SVReply){
 					$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
 					$SVPOSTValue['messages'][0]['type']	= "text";
