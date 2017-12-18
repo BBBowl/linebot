@@ -24,7 +24,7 @@
 		$DBName			= "duckduck";
 		$DBUsername		= "linebot";
 		$DBURLMain		= "https://api.mlab.com/api/1/databases/".$DBName."/collections/".$DBUsername."?apiKey=".$DBAPIKey;
-		$DBURLQuery		= $DBURLMain.$DBQueryString;
+		$DBURLQuery		= file_get_contents($DBURLMain.$DBQueryString);
 		
 		$DBJSON			= json_decode($DBURLQuery);
 		$DBDataSize		= sizeof($DBJSON);
