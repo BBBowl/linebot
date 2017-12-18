@@ -27,7 +27,7 @@
 		$DBURLQuery		= $DBURLMain.$DBQueryString;
 		
 		$DBQuery		= file_get_contents($DBURLQuery);
-		$DBJSON			= json_decode($DBURLQuery);
+		$DBJSON			= json_decode($DBQuery);
 		$DBDataSize		= sizeof($DBJSON);
 	
 	/* DATA and OPERATION :: Send value(s) to Database and/or reply back to LINE-app Section */
@@ -80,7 +80,7 @@
 				foreach($DBJSON as $SVReply){
 					$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
 					$SVPOSTValue['messages'][0]['type']	= "text";
-					$SVPOSTValue['messages'][0]['text']	= "ทดสอบ"; //$SVReply->reply;
+					$SVPOSTValue['messages'][0]['text']	= $SVReply->reply;
 				}
 			}else{
 				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
