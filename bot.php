@@ -100,5 +100,7 @@
 		
 		echo "RESULT : ".$SVCURLResult;
 		echo "<br>";
+		echo "DBJSON : ".$DBJSON;
+		echo "<br>";
 		print_r($SVPOSTValue);
 ?>
