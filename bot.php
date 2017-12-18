@@ -1,87 +1,100 @@
 <?php
- 
-$strAccessToken = 'oTKcYXoC2DTzC2BBwatZW6kjgdVzc5UR/l9Djn1dwZkNWunWfistKbfbaKK7SGOtuiY3R+7EGn0xfE6Saow6c+pH6xUVy56ee1BXJqaqiKVaNgZRX37s6oR8VvvtfGhvQNYwhtr2bk/jzcqomngf+wdB04t89/1O/w1cDnyilFU=';
- 
-$content = file_get_contents('php://input');
-$arrJson = json_decode($content, true);
- 
-$strUrl = "https://api.line.me/v2/bot/message/reply";
- 
-$arrHeader = array();
-$arrHeader[] = "Content-Type: application/json";
-$arrHeader[] = "Authorization: Bearer {$strAccessToken}";
-$_msg = $arrJson['events'][0]['message']['text'];
- 
- 
-$api_key="gEd3E2gniu_jJsug_KdfopukhrMghFyC";
-$url = 'https://api.mlab.com/api/1/databases/duckduck/collections/linebot?apiKey='.$api_key.'';
-$json = file_get_contents('https://api.mlab.com/api/1/databases/duckduck/collections/linebot?apiKey='.$api_key.'&q={"question":"'.$_msg.'"}');
-$data = json_decode($json);
-$isData=sizeof($data);
- 
-if (strpos($_msg, 'สอนเป็ด') !== false) {
-  if (strpos($_msg, 'สอนเป็ด') !== false) {
-    $x_tra = str_replace("สอนเป็ด","", $_msg);
-    $pieces = explode("|", $x_tra);
-    $_question=str_replace("[","",$pieces[0]);
-    $_answer=str_replace("]","",$pieces[1]);
-    //Post New Data
-    $newData = json_encode(
-      array(
-        'question' => $_question,
-        'answer'=> $_answer
-      )
-    );
-    $opts = array(
-      'http' => array(
-          'method' => "POST",
-          'header' => "Content-type: application/json",
-          'content' => $newData
-       )
-    );
-    $context = stream_context_create($opts);
-    $returnValue = file_get_contents($url,false,$context);
-    $arrPostData = array();
-    $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
-    $arrPostData['messages'][0]['type'] = "text";
-    $arrPostData['messages'][0]['text'] = 'ขอบคุณที่สอนเป็ด';
-  }
-}else{
-  if($isData >0){
-   foreach($data as $rec){
-    $arrPostData = array();
-    $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
-    $arrPostData['messages'][0]['type'] = "text";
-    $arrPostData['messages'][0]['text'] = $rec->answer;
-   }
-  }else{
-    $arrPostData = array();
-    $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
-    $arrPostData['messages'][0]['type'] = "text";
-    $arrPostData['messages'][0]['text'] = 'ก๊าบบ คุณสามารถสอนให้ฉลาดได้เพียงพิมพ์: สอนเป็ด[คำถาม|คำตอบ]';
-  }
-}
- 
- 
-$channel = curl_init();
-curl_setopt($channel, CURLOPT_URL,$strUrl);
-curl_setopt($channel, CURLOPT_HEADER, false);
-curl_setopt($channel, CURLOPT_POST, true);
-curl_setopt($channel, CURLOPT_HTTPHEADER, $arrHeader);
-curl_setopt($channel, CURLOPT_POSTFIELDS, json_encode($arrPostData));
-curl_setopt($channel, CURLOPT_RETURNTRANSFER,true);
-curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, false);
-$result = curl_exec($channel);
-curl_close ($channel);
+	/* DATA :: INPUT from LINE-app */
+	
+		$INPUTContent	= file_get_contents('php://input');
+		$INPUTJSON 		= json_decode($INPUTContent,true);
+		$INPUTMsg		= $INPUTJSON['events'][0]['message']['text'];
+	
+	/* DATA :: LINE Section */
+	
+		$LINEMsgID				= "";
+		$LINEChannelAccessToken	= "oTKcYXoC2DTzC2BBwatZW6kjgdVzc5UR/l9Djn1dwZkNWunWfistKbfbaKK7SGOtuiY3R+7EGn0xfE6Saow6c+pH6xUVy56ee1BXJqaqiKVaNgZRX37s6oR8VvvtfGhvQNYwhtr2bk/jzcqomngf+wdB04t89/1O/w1cDnyilFU=";
+		$LINEURLMain			= "https://api.line.me/v2/bot/message";
+		$LINEURLByMsgType		= array(
+									"POSTReply"		=> $LINEURLMain."/reply",
+									"POSTPush" 		=> $LINEURLMain."/push",
+									"POSTMulticast" => $LINEURLMain."/multicast",
+									"GETContent"	=> $LINEURLMain."/".$LINEMsgID."/content"
+								  );
 
-/*
-echo "RESULT : ".$result;
-echo "<br>";
-echo "_MSG : ".$_msg;
-echo "<br>";
-echo "DATA : ".$data;
-*/
-
-print_r($arrJson);
-
+	/* DATA and OPERATION :: Database Section */
+	
+		$DBAPIKey		= "gEd3E2gniu_jJsug_KdfopukhrMghFyC";
+		$DBQueryString	= '&q={"question":"'.$INPUTMsg.'"}';
+		$DBName			= "duckduck";
+		$DBUsername		= "linebot";
+		$DBURLMain		= "https://api.mlab.com/api/1/databases/".$DBName."/collections/".$DBUsername."?apiKey=".$DBAPIKey;
+		$DBURLQuery		= $DBURLMain.$DBQueryString;
+		
+		$DBJSON			= json_decode($DBURLQuery);
+		$DBDataSize		= sizeof($DBJSON);
+	
+	/* DATA and OPERATION :: Send value(s) to Database and/or reply back to LINE-app Section */
+	
+		$SVCmdType	= array(
+						"สอน"
+					  );
+		$SVCmdSign	= array(
+						"[",
+						"]"
+					  );
+		
+		$SVMethod	= array("POST","GET");
+		$SVHeader	= array(
+						"Content-Type: application/json",
+						"Authorization: Bearer {".$LINEChannelAccessToken."}"
+					  );
+					  
+		if(strpos($INPUTMsg,$SVCmdType) != false){
+			if(strpos($INPUTMsg,$SVCmdType[0]) != false){
+				$SVValueExtraction	= explode("|",str_replace($SVCmdSign,"",str_replace($SVCmdType[0],"",$INPUTMsg)));
+				$SVRequest			= $SVValueExtraction[0];
+				$SVReply			= $SVValueExtraction[1];
+				
+				$SVJSON				= json_encode(
+										array(
+											"request"	=> $SVRequest,
+											"reply"		=> $SVReply
+										)
+									  );
+				$SVContent			= array(
+										"http"	=> array(
+													"method"	=> "POST",
+													"header"	=> $SVHeader[0],
+													"content"	=> $SVMethod[0]
+												   )
+									  );
+				
+				file_get_contents($DBURLMain,false,$SVContent);
+				
+				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
+				$SVPOSTValue['messages'][0]['type']	= "text";
+				$SVPOSTValue['messages'][0]['text']	= "ขอบคุณสำหรับการสอนคร๊าบบบ";
+				
+				$LINEURLFinal	= $LINEURLByMsgType['POSTReply'];
+			}
+		}else{
+			if(!empty($DBDataSize)){
+				foreach($DBJSON as $SVReply){
+					$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
+					$SVPOSTValue['messages'][0]['type']	= "text";
+					$SVPOSTValue['messages'][0]['text']	= $SVReply->reply;
+				}
+			}else{
+				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
+				$SVPOSTValue['messages'][0]['type']	= "text";
+				$SVPOSTValue['messages'][0]['text']	= "แง แง แง, พูดอะไรก็ไม่รู้ สอนผมหน่อย สอนผมหน่อย ผมจะได้รู้เรื่อง, นะ นะ นะคร๊าบบบ. สอนผมแบบนี้นะ : สอน[คำสอน|คำตอบ]";
+			}
+		}
+		
+		$SVCURL	= curl_init();
+			curl_setopt($SVCURL,CURLOPT_URL,$LINEURLFinal);
+			curl_setopt($SVCURL,CURLOPT_HEADER,false);
+			curl_setopt($SVCURL,CURLOPT_POST,true);
+			curl_setopt($SVCURL,CURLOPT_HTTPHEADER,$SVHeader);
+			curl_setopt($SVCURL,CURLOPT_POSTFIELDS,json_encode($SVPOSTValue));
+			curl_setopt($SVCURL,CURLOPT_RETURNTRANSFER,true);
+			curl_setopt($SVCURL,CURLOPT_SSL_VERIFYPEER,false);
+			curl_exec($SVCURL);
+		curl_close($SVCURL);
 ?>
