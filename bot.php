@@ -20,7 +20,7 @@
 	/* DATA and OPERATION :: Database Section */
 	
 		$DBAPIKey		= "gEd3E2gniu_jJsug_KdfopukhrMghFyC";
-		$DBQueryString	= '&q={"question":"'.$INPUTMsg.'"}';
+		$DBQueryString	= '&q={"request":"'.$INPUTMsg.'"}';
 		$DBName			= "duckduck";
 		$DBUsername		= "linebot2";
 		$DBURLMain		= "https://api.mlab.com/api/1/databases/".$DBName."/collections/".$DBUsername."?apiKey=".$DBAPIKey;
