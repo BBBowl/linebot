@@ -73,9 +73,15 @@ curl_setopt($channel, CURLOPT_RETURNTRANSFER,true);
 curl_setopt($channel, CURLOPT_SSL_VERIFYPEER, false);
 $result = curl_exec($channel);
 curl_close ($channel);
+
+/*
 echo "RESULT : ".$result;
 echo "<br>";
 echo "_MSG : ".$_msg;
 echo "<br>";
 echo "DATA : ".$data;
+*/
+
+print_r($arrJson);
+
 ?>
