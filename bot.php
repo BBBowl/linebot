@@ -45,7 +45,7 @@
 						"Authorization: Bearer {".$LINEChannelAccessToken."}"
 					  );
 					  
-		if(strpos($INPUTMsg,$SVCmdType[0]) != false){
+		if(strpos($INPUTMsg,$SVCmdType) != false){
 			if(strpos($INPUTMsg,$SVCmdType[0]) != false){
 				$SVValueExtraction	= explode("|",str_replace($SVCmdSign,"",str_replace($SVCmdType[0],"",$INPUTMsg)));
 				$SVRequest			= $SVValueExtraction[0];
@@ -57,14 +57,15 @@
 											"reply"		=> $SVReply
 										)
 									  );
-				$SVContent			= array(
+				$SVOption			= array(
 										"http"	=> array(
-													"method"	=> "POST",
+													"method"	=> $SVMethod[0],
 													"header"	=> $SVHeader[0],
-													"content"	=> $SVMethod[0]
+													"content"	=> $SVJSON
 												   )
 									  );
 				
+				$SVContext 			= stream_context_create($SVOption);
 				file_get_contents($DBURLMain,false,$SVContent);
 				
 				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
