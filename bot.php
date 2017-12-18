@@ -100,8 +100,8 @@
 		
 		//echo "RESULT : ".$SVCURLResult;
 		//echo "<br>";
-		echo "DBJSON : ";
-		print_r(json_encode($DBJSON));
+		echo "INPUTContent : ";
+		print_r($INPUTContent);
 		echo "<br>";
 		echo "SVPOSTValue : ";
 		print_r($SVPOSTValue);
