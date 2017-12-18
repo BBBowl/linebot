@@ -65,7 +65,7 @@
 												   )
 									  );
 				
-				$SVContext 			= stream_context_create($SVOption);
+				$SVContent 			= stream_context_create($SVOption);
 				file_get_contents($DBURLMain,false,$SVContent);
 				
 				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
