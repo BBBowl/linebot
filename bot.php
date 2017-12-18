@@ -98,5 +98,7 @@
 		$SVCURLResult	= curl_exec($SVCURL);
 		curl_close($SVCURL);
 		
-		echo $SVCURLResult;
+		echo "RESULT : ".$SVCURLResult;
+		echo "<br>";
+		print_r($SVPOSTValue);
 ?>
