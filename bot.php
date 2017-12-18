@@ -45,7 +45,7 @@
 						"Authorization: Bearer {".$LINEChannelAccessToken."}"
 					  );
 					  
-		if(strpos($INPUTMsg,$SVCmdType) != false){
+		if(strpos($INPUTMsg,$SVCmdType[0]) != false){
 			if(strpos($INPUTMsg,$SVCmdType[0]) != false){
 				$SVValueExtraction	= explode("|",str_replace($SVCmdSign,"",str_replace($SVCmdType[0],"",$INPUTMsg)));
 				$SVRequest			= $SVValueExtraction[0];
