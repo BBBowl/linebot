@@ -33,7 +33,7 @@
 	/* DATA and OPERATION :: Send value(s) to Database and/or reply back to LINE-app Section */
 	
 		$SVCmdType	= array(
-						"สอน"
+						"*สอน"
 					  );
 		$SVCmdSign	= array(
 						"[",
