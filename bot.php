@@ -85,7 +85,7 @@
 			}else{
 				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
 				$SVPOSTValue['messages'][0]['type']	= "text";
-				$SVPOSTValue['messages'][0]['text']	= "แง แง แง, พูดอะไรก็ไม่รู้ สอนผมหน่อย สอนผมหน่อย ผมจะได้รู้เรื่อง, นะ นะ นะคร๊าบบบ. สอนผมแบบนี้นะ : สอน[คำสอน|คำตอบ]";
+				$SVPOSTValue['messages'][0]['text']	= "แง แง แง, พูดอะไรก็ไม่รู้ สอนผมหน่อย สอนผมหน่อย ผมจะได้รู้เรื่อง, นะ นะ นะคร๊าบบบ. สอนผมแบบนี้นะ : *สอน*[คำสอน|คำตอบ]";
 			}
 			
 			$LINEURLFinal	= $LINEURLByMsgType['POSTReply'];
