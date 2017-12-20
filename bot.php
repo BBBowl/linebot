@@ -1,38 +1,112 @@
-<?php $pathCurrent	= "./"; ?>
-<?php include($pathCurrent."bot/bot_include.php"); ?>
 <?php
-	/* DECLARATION :: Namespaces (SDK-LINE) Section */
+	/* DATA :: INPUT from LINE-app */
+	
+		$INPUTContent	= file_get_contents('php://input');
+		$INPUTJSON 		= json_decode($INPUTContent,true);
+		$INPUTMsg		= $INPUTJSON['events'][0]['message']['text'];
+	
+	/* DATA :: LINE Section */
+	
+		$LINEMsgID				= "";
+		$LINEChannelAccessToken	= "OXrrG2XUc9kyILGUVDj1qUlP6P9NQ8/2dcsm/fHMXivqD5F4xTcWopoCgrI3BB72uiY3R+7EGn0xfE6Saow6c+pH6xUVy56ee1BXJqaqiKX7Qq1UxthEMWJWEcpzUTyVxs39xiMohlRqD8yhmaKT6QdB04t89/1O/w1cDnyilFU=";
+		$LINEURLMain			= "https://api.line.me/v2/bot/message";
+		$LINEURLByMsgType		= array(
+									"POSTReply"		=> $LINEURLMain."/reply",
+									"POSTPush" 		=> $LINEURLMain."/push",
+									"POSTMulticast" => $LINEURLMain."/multicast",
+									"GETContent"	=> $LINEURLMain."/".$LINEMsgID."/content"
+								  );
+
+	/* DATA and OPERATION :: Database Section */
+	
+		$DBAPIKey		= "gEd3E2gniu_jJsug_KdfopukhrMghFyC";
+		$DBQueryString	= '&q={"request":"'.$INPUTMsg.'"}';
+		$DBName			= "duckduck";
+		$DBUsername		= "linebot2";
+		$DBURLMain		= "https://api.mlab.com/api/1/databases/".$DBName."/collections/".$DBUsername."?apiKey=".$DBAPIKey;
+		$DBURLQuery		= $DBURLMain.$DBQueryString;
 		
-		use \LINE											as LINE;
-		use \LINE\LINEBot\Constant\HTTPHeader				as LINEHTTPHeader;
-		use \LINE\LINEBot\Event\MessageEvent\TextMessage	as LINETextMessage;
-		use	\LINE\LINEBot\HTTPClient						as LINEHTTPClient;
-?>
-<?php
-	/* CONNECTION :: LINE Section */
+		$DBQuery		= file_get_contents($DBURLQuery);
+		$DBJSON			= json_decode($DBQuery);
+		$DBDataSize		= sizeof($DBJSON);
 	
-		$LINECurlHTTPClient	= new LINEHTTPClient\CurlHTTPClient($LINEChannelAccessToken	);
-		$LINEHTTPClient		= new LINE\LINEBOT($LINECurlHTTPClient,$LINEChannelSecret);
-		$LINESignature		= $_SERVER["HTTP_".LINEHTTPHeader::LINE_SIGNATURE];
+	/* DATA and OPERATION :: Send value(s) to Database and/or reply back to LINE-app Section */
 	
-	/* DATA :: INPUT from LINE-app Section */
-	
-		$INPUTContent		= file_get_contents('php://input');
-		$INPUTEvents		= $LINEHTTPClient->parseEventRequest($INPUTContent,$LINESignature);
-	
-	/* OPERAtiON :: Send and Receive data to/from LINE and/or Database Section */
-	
-		foreach($INPUTEvents as $event){
-			if($event instanceof LINETextMessage){
-				$SRReplyToken	= $event->getReplyToken;
-				$SRText			= $event->getText();
+		$SVCmdType	= array(
+						"*สอน*"
+					  );
+		$SVCmdSign	= array(
+						"[",
+						"]"
+					  );
+		
+		$SVMethod	= array("POST","GET");
+		$SVHeader	= array(
+						"Content-Type: application/json",
+						"Authorization: Bearer {".$LINEChannelAccessToken."}"
+					  );
+					  
+		if(strpos($INPUTMsg,$SVCmdType[0]) !== false){
+			if(strpos($INPUTMsg,$SVCmdType[0]) !== false){
+				$SVValueExtraction	= explode("|",str_replace($SVCmdSign,"",str_replace($SVCmdType[0],"",$INPUTMsg)));
+				$SVRequest			= $SVValueExtraction[0];
+				$SVReply			= $SVValueExtraction[1];
 				
-				$LINEHTTPClient->replyText($SRReplyToken,$SRText);
+				$SVJSON				= json_encode(
+										array(
+											"request"	=> $SVRequest,
+											"reply"		=> $SVReply
+										)
+									  );
+				$SVOption			= array(
+										"http"	=> array(
+													"method"	=> $SVMethod[0],
+													"header"	=> $SVHeader[0],
+													"content"	=> $SVJSON
+												   )
+									  );
+				
+				$SVContent 			= stream_context_create($SVOption);
+				file_get_contents($DBURLMain,false,$SVContent);
+				
+				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
+				$SVPOSTValue['messages'][0]['type']	= "text";
+				$SVPOSTValue['messages'][0]['text']	= "ขอบคุณสำหรับการสอนคร๊าบบบ";
+				
+				$LINEURLFinal	= $LINEURLByMsgType['POSTReply'];
 			}
+		}else{
+			if($DBDataSize > 0){
+				foreach($DBJSON as $SVReply){
+					$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
+					$SVPOSTValue['messages'][0]['type']	= "text";
+					$SVPOSTValue['messages'][0]['text']	= $SVReply->reply;
+				}
+			}else{
+				$SVPOSTValue['replyToken']			= $INPUTJSON['events'][0]['replyToken'];
+				$SVPOSTValue['messages'][0]['type']	= "text";
+				$SVPOSTValue['messages'][0]['text']	= "แง แง แง, สอนผมหน่อย สอนผมหน่อย ผมจะได้รู้เรื่อง, นะ นะ นะคร๊าบบบ. สอนผมแบบนี้นะ : *สอน*[คำสอน|คำตอบ]";
+			}
+			
+			$LINEURLFinal	= $LINEURLByMsgType['POSTReply'];
 		}
-?>
-<?php
-	/* AREA :: Testing Section */
-	
-		//echo "LINESignature : ".$LINESignature.",".LINEHTTPHeader::LINE_SIGNATURE;
+		
+		$SVCURL			= curl_init();
+			curl_setopt($SVCURL,CURLOPT_URL,$LINEURLFinal);
+			curl_setopt($SVCURL,CURLOPT_HEADER,false);
+			curl_setopt($SVCURL,CURLOPT_POST,true);
+			curl_setopt($SVCURL,CURLOPT_HTTPHEADER,$SVHeader);
+			curl_setopt($SVCURL,CURLOPT_POSTFIELDS,json_encode($SVPOSTValue));
+			curl_setopt($SVCURL,CURLOPT_RETURNTRANSFER,true);
+			curl_setopt($SVCURL,CURLOPT_SSL_VERIFYPEER,false);
+		$SVCURLResult	= curl_exec($SVCURL);
+		curl_close($SVCURL);
+		
+		//echo "RESULT : ".$SVCURLResult;
+		//echo "<br>";
+		echo "INPUTContent : ";
+		print_r($INPUTContent);
+		echo "<br>";
+		echo "SVPOSTValue : ";
+		print_r($SVPOSTValue);
 ?>
