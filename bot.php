@@ -8,7 +8,8 @@
 	/* DATA :: LINE Section */
 	
 		$LINEMsgID				= "";
-		$LINEChannelAccessToken	= "OXrrG2XUc9kyILGUVDj1qUlP6P9NQ8/2dcsm/fHMXivqD5F4xTcWopoCgrI3BB72uiY3R+7EGn0xfE6Saow6c+pH6xUVy56ee1BXJqaqiKX7Qq1UxthEMWJWEcpzUTyVxs39xiMohlRqD8yhmaKT6QdB04t89/1O/w1cDnyilFU=";
+		$LINEChannelAccessToken	= "1240gB1PZXyeYmLiXj/EXQ0lzrkqe6O+D3JGwz5GVw4m544xt1bP/s1XXCfQeUnsuiY3R+7EGn0xfE6Saow6c+pH6xUVy56ee1BXJqaqiKVMZvCXPt4iybhIo73CE8SFmGtSuu9Z3EpCZxBZEokveQdB04t89/1O/w1cDnyilFU=
+";
 		$LINEURLMain			= "https://api.line.me/v2/bot/message";
 		$LINEURLByMsgType		= array(
 									"POSTReply"		=> $LINEURLMain."/reply",
